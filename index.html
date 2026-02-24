@@ -7,28 +7,86 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
+  /* ═══════════════════════════════════════════
+     THEME: DARK (default)
+     ═══════════════════════════════════════════ */
+  :root,
+  [data-theme="dark"] {
     --bg: #0f1117;
     --surface: #181b24;
     --surface-alt: #1e2230;
     --border: #2a2f3e;
-    --border-glow: #3b82f6;
+    --border-hover: #363c50;
     --text: #e8eaf0;
     --text-muted: #8892a8;
     --accent: #3b82f6;
     --accent-light: #60a5fa;
     --accent-dark: #2563eb;
-    --success: #22c55e;
-    --warning: #f59e0b;
-    --danger: #ef4444;
+    --success-bg: rgba(34,197,94,0.1);
+    --success-border: rgba(34,197,94,0.3);
+    --success-text: #86efac;
+    --warning-bg: rgba(245,158,11,0.1);
+    --warning-border: rgba(245,158,11,0.3);
+    --warning-text: #fcd34d;
+    --error-bg: rgba(239,68,68,0.1);
+    --error-border: rgba(239,68,68,0.3);
+    --error-text: #fca5a5;
     --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    --gradient-2: linear-gradient(135deg, #0f1117 0%, #1a1d2e 100%);
+    --checkbox-active-bg: rgba(59,130,246,0.08);
+    --counter-bg: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
+    --counter-border: rgba(59,130,246,0.25);
+    --placeholder: #4a5068;
+    --btn-shadow: rgba(59,130,246,0.25);
+    --btn-shadow-hover: rgba(59,130,246,0.35);
+    --bg-orb-1: rgba(59,130,246,0.06);
+    --bg-orb-2: rgba(139,92,246,0.05);
+    --bg-orb-3: rgba(34,197,94,0.03);
+    --toolbar-bg: rgba(24,27,36,0.85);
+    --toolbar-border: #2a2f3e;
     --radius: 12px;
     --radius-sm: 8px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.3);
-    --shadow-glow: 0 0 20px rgba(59,130,246,0.15);
   }
 
+  /* ═══════════════════════════════════════════
+     THEME: LIGHT
+     ═══════════════════════════════════════════ */
+  [data-theme="light"] {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-alt: #f0f2f5;
+    --border: #dde1e8;
+    --border-hover: #c5cad4;
+    --text: #1a1d26;
+    --text-muted: #64708a;
+    --accent: #2563eb;
+    --accent-light: #3b82f6;
+    --accent-dark: #1d4ed8;
+    --success-bg: rgba(34,197,94,0.1);
+    --success-border: rgba(34,197,94,0.4);
+    --success-text: #15803d;
+    --warning-bg: rgba(245,158,11,0.1);
+    --warning-border: rgba(245,158,11,0.4);
+    --warning-text: #92400e;
+    --error-bg: rgba(239,68,68,0.08);
+    --error-border: rgba(239,68,68,0.35);
+    --error-text: #b91c1c;
+    --gradient-1: linear-gradient(135deg, #2563eb, #7c3aed);
+    --checkbox-active-bg: rgba(37,99,235,0.07);
+    --counter-bg: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.06));
+    --counter-border: rgba(37,99,235,0.2);
+    --placeholder: #a0a8ba;
+    --btn-shadow: rgba(37,99,235,0.2);
+    --btn-shadow-hover: rgba(37,99,235,0.3);
+    --bg-orb-1: rgba(37,99,235,0.04);
+    --bg-orb-2: rgba(124,58,237,0.03);
+    --bg-orb-3: rgba(34,197,94,0.02);
+    --toolbar-bg: rgba(255,255,255,0.88);
+    --toolbar-border: #dde1e8;
+  }
+
+  /* ═══════════════════════════════════════════
+     BASE
+     ═══════════════════════════════════════════ */
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -37,20 +95,18 @@
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background 0.35s, color 0.35s;
   }
 
-  /* Animated background */
   body::before {
     content: '';
     position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
     background:
-      radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 80%, rgba(34,197,94,0.03) 0%, transparent 50%);
+      radial-gradient(ellipse at 20% 50%, var(--bg-orb-1) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, var(--bg-orb-2) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, var(--bg-orb-3) 0%, transparent 50%);
     animation: bgFloat 20s ease-in-out infinite alternate;
     z-index: 0;
     pointer-events: none;
@@ -66,10 +122,80 @@
     z-index: 1;
     max-width: 720px;
     margin: 0 auto;
-    padding: 24px 16px 60px;
+    padding: 72px 16px 60px;
   }
 
-  /* Header */
+  /* ═══════════════════════════════════════════
+     TOOLBAR
+     ═══════════════════════════════════════════ */
+  .toolbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--toolbar-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--toolbar-border);
+    transition: background 0.35s, border-color 0.35s;
+  }
+
+  .toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+
+  .toolbar-btn:hover {
+    border-color: var(--accent);
+    background: var(--checkbox-active-bg);
+  }
+
+  .toolbar-btn .icon { font-size: 1rem; line-height: 1; }
+
+  .lang-select {
+    padding: 8px 32px 8px 12px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238892a8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  .lang-select:hover { border-color: var(--accent); }
+  .lang-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+
+  /* ═══════════════════════════════════════════
+     HEADER
+     ═══════════════════════════════════════════ */
   .header {
     text-align: center;
     margin-bottom: 36px;
@@ -80,13 +206,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
+    width: 56px; height: 56px;
     border-radius: 16px;
     background: var(--gradient-1);
     margin-bottom: 16px;
     font-size: 26px;
-    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+    box-shadow: 0 4px 20px var(--btn-shadow);
   }
 
   .header h1 {
@@ -106,7 +231,9 @@
     font-weight: 300;
   }
 
-  /* Card */
+  /* ═══════════════════════════════════════════
+     CARD
+     ═══════════════════════════════════════════ */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -114,10 +241,10 @@
     padding: 24px;
     margin-bottom: 16px;
     animation: fadeUp 0.5s ease-out both;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, background 0.35s;
   }
 
-  .card:hover { border-color: #363c50; }
+  .card:hover { border-color: var(--border-hover); }
 
   .card-label {
     display: block;
@@ -129,16 +256,15 @@
     margin-bottom: 12px;
   }
 
-  /* Select */
-  .select-wrapper {
-    position: relative;
-  }
+  /* ═══════════════════════════════════════════
+     SELECT
+     ═══════════════════════════════════════════ */
+  .select-wrapper { position: relative; }
 
   .select-wrapper::after {
     content: '▾';
     position: absolute;
-    right: 16px;
-    top: 50%;
+    right: 16px; top: 50%;
     transform: translateY(-50%);
     color: var(--accent);
     pointer-events: none;
@@ -166,19 +292,14 @@
     box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
   }
 
-  /* Checkboxes */
-  .checkbox-group {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  /* ═══════════════════════════════════════════
+     CHECKBOXES
+     ═══════════════════════════════════════════ */
+  .checkbox-group { display: flex; gap: 12px; flex-wrap: wrap; }
 
   .checkbox-item {
-    flex: 1;
-    min-width: 160px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    flex: 1; min-width: 160px;
+    display: flex; align-items: center; gap: 10px;
     padding: 14px 16px;
     background: var(--surface-alt);
     border: 1px solid var(--border);
@@ -188,65 +309,46 @@
     user-select: none;
   }
 
-  .checkbox-item:hover { border-color: #464d66; }
+  .checkbox-item:hover { border-color: var(--border-hover); }
   .checkbox-item.active {
     border-color: var(--accent);
-    background: rgba(59,130,246,0.08);
+    background: var(--checkbox-active-bg);
   }
 
   .checkbox-item input[type="checkbox"] { display: none; }
 
   .check-box {
-    width: 22px;
-    height: 22px;
+    width: 22px; height: 22px;
     border-radius: 6px;
     border: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
     transition: all 0.25s;
   }
 
   .check-box svg {
-    width: 14px;
-    height: 14px;
-    stroke: white;
-    stroke-width: 3;
-    fill: none;
-    opacity: 0;
-    transform: scale(0.5);
+    width: 14px; height: 14px;
+    stroke: white; stroke-width: 3; fill: none;
+    opacity: 0; transform: scale(0.5);
     transition: all 0.2s;
   }
 
-  .checkbox-item.active .check-box {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
+  .checkbox-item.active .check-box { background: var(--accent); border-color: var(--accent); }
+  .checkbox-item.active .check-box svg { opacity: 1; transform: scale(1); }
 
-  .checkbox-item.active .check-box svg {
-    opacity: 1;
-    transform: scale(1);
-  }
+  .check-label { font-size: 0.92rem; font-weight: 500; color: var(--text); }
 
-  .check-label {
-    font-size: 0.92rem;
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  /* Textarea */
+  /* ═══════════════════════════════════════════
+     TEXTAREA
+     ═══════════════════════════════════════════ */
   textarea {
-    width: 100%;
-    min-height: 160px;
-    padding: 16px;
+    width: 100%; min-height: 160px; padding: 16px;
     background: var(--surface-alt);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
     font-family: 'Space Mono', monospace;
-    font-size: 0.88rem;
-    line-height: 1.6;
+    font-size: 0.88rem; line-height: 1.6;
     resize: vertical;
     transition: all 0.25s;
   }
@@ -258,38 +360,30 @@
   }
 
   textarea::placeholder {
-    color: #4a5068;
+    color: var(--placeholder);
     font-family: 'Outfit', sans-serif;
     font-style: italic;
   }
 
-  /* Counter badge */
-  .counter-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 14px;
-  }
+  /* ═══════════════════════════════════════════
+     COUNTER
+     ═══════════════════════════════════════════ */
+  .counter-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
 
   .counter-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    display: inline-flex; align-items: center; gap: 8px;
     padding: 10px 18px;
-    background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
-    border: 1px solid rgba(59,130,246,0.25);
+    background: var(--counter-bg);
+    border: 1px solid var(--counter-border);
     border-radius: 50px;
     font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 0.85rem; font-weight: 700;
     color: var(--accent-light);
     transition: all 0.3s;
   }
 
   .counter-badge .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    width: 8px; height: 8px; border-radius: 50%;
     background: var(--accent);
     animation: pulse 2s ease-in-out infinite;
   }
@@ -299,100 +393,72 @@
     50%      { opacity: 1; transform: scale(1.3); }
   }
 
-  /* Button */
+  /* ═══════════════════════════════════════════
+     BUTTON
+     ═══════════════════════════════════════════ */
   .btn-sortear {
-    width: 100%;
-    padding: 16px;
+    width: 100%; padding: 16px;
     background: var(--gradient-1);
-    border: none;
-    border-radius: var(--radius-sm);
+    border: none; border-radius: var(--radius-sm);
     color: white;
     font-family: 'Outfit', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: 1.05rem; font-weight: 700;
     letter-spacing: 0.02em;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     transition: all 0.3s;
-    box-shadow: 0 4px 16px rgba(59,130,246,0.25);
+    box-shadow: 0 4px 16px var(--btn-shadow);
   }
 
   .btn-sortear:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(59,130,246,0.35);
+    box-shadow: 0 6px 24px var(--btn-shadow-hover);
   }
 
-  .btn-sortear:active {
-    transform: translateY(0);
-  }
+  .btn-sortear:active { transform: translateY(0); }
 
   .btn-sortear::after {
     content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
     transform: translateX(-100%);
     transition: transform 0.5s;
   }
 
-  .btn-sortear:hover::after {
-    transform: translateX(100%);
-  }
+  .btn-sortear:hover::after { transform: translateX(100%); }
 
-  /* Message */
+  /* ═══════════════════════════════════════════
+     MESSAGE
+     ═══════════════════════════════════════════ */
   .message {
     display: none;
     padding: 14px 18px;
     border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.9rem; font-weight: 500;
     margin-bottom: 16px;
     animation: fadeUp 0.3s ease-out;
   }
 
   .message.show { display: flex; align-items: center; gap: 10px; }
 
-  .message.error {
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.3);
-    color: #fca5a5;
-  }
+  .message.error   { background: var(--error-bg);   border: 1px solid var(--error-border);   color: var(--error-text); }
+  .message.warning { background: var(--warning-bg); border: 1px solid var(--warning-border); color: var(--warning-text); }
+  .message.success { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
 
-  .message.warning {
-    background: rgba(245,158,11,0.1);
-    border: 1px solid rgba(245,158,11,0.3);
-    color: #fcd34d;
-  }
-
-  .message.success {
-    background: rgba(34,197,94,0.1);
-    border: 1px solid rgba(34,197,94,0.3);
-    color: #86efac;
-  }
-
-  /* Result */
-  .result-area {
-    display: none;
-    animation: fadeUp 0.5s ease-out;
-  }
-
+  /* ═══════════════════════════════════════════
+     RESULT
+     ═══════════════════════════════════════════ */
+  .result-area { display: none; animation: fadeUp 0.5s ease-out; }
   .result-area.show { display: block; }
 
   .result-title {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1rem; font-weight: 700;
     margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex; align-items: center; gap: 8px;
     color: var(--accent-light);
   }
 
-  .teams-grid {
-    display: grid;
-    gap: 12px;
-  }
+  .teams-grid { display: grid; gap: 12px; }
 
   .team-card {
     background: var(--surface-alt);
@@ -403,113 +469,70 @@
     transition: border-color 0.3s, transform 0.3s;
   }
 
-  .team-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-1px);
-  }
+  .team-card:hover { border-color: var(--accent); transform: translateY(-1px); }
 
   .team-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px; padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
   }
 
   .team-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 8px;
     background: var(--gradient-1);
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: white;
+    font-size: 0.78rem; font-weight: 700; color: white;
     flex-shrink: 0;
   }
 
-  .team-name {
-    font-weight: 600;
-    font-size: 0.88rem;
-  }
+  .team-name { font-weight: 600; font-size: 0.88rem; }
 
-  .team-members {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+  .team-members { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 
   .team-members li {
     font-family: 'Space Mono', monospace;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    padding: 4px 0;
-    padding-left: 12px;
-    position: relative;
+    font-size: 0.82rem; color: var(--text-muted);
+    padding: 4px 0 4px 12px; position: relative;
   }
 
   .team-members li::before {
     content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--accent);
-    transform: translateY(-50%);
+    position: absolute; left: 0; top: 50%;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--accent); transform: translateY(-50%);
   }
 
-  /* Result textarea */
   .result-textarea {
-    width: 100%;
-    min-height: 200px;
-    padding: 16px;
+    width: 100%; min-height: 200px; padding: 16px;
     background: var(--surface-alt);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
     font-family: 'Space Mono', monospace;
-    font-size: 0.82rem;
-    line-height: 1.6;
-    resize: vertical;
-    margin-top: 12px;
-    white-space: pre;
-    tab-size: 2;
+    font-size: 0.82rem; line-height: 1.6;
+    resize: vertical; margin-top: 12px;
+    white-space: pre; tab-size: 2;
   }
 
-  .result-textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
+  .result-textarea:focus { outline: none; border-color: var(--accent); }
 
   .btn-copy {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 20px;
     background: var(--surface-alt);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
     font-family: 'Outfit', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s;
-    margin-top: 10px;
+    font-size: 0.85rem; font-weight: 500;
+    cursor: pointer; transition: all 0.25s; margin-top: 10px;
   }
 
-  .btn-copy:hover {
-    border-color: var(--accent);
-    color: var(--text);
-  }
+  .btn-copy:hover { border-color: var(--accent); color: var(--text); }
 
-  /* Animations */
+  /* ═══════════════════════════════════════════
+     ANIMATIONS
+     ═══════════════════════════════════════════ */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -520,7 +543,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* Stagger cards */
   .team-card:nth-child(1)  { animation-delay: 0.05s; }
   .team-card:nth-child(2)  { animation-delay: 0.10s; }
   .team-card:nth-child(3)  { animation-delay: 0.15s; }
@@ -532,17 +554,6 @@
   .team-card:nth-child(9)  { animation-delay: 0.45s; }
   .team-card:nth-child(10) { animation-delay: 0.50s; }
 
-  /* Responsive grid */
-  @media (min-width: 500px) {
-    .teams-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (min-width: 680px) {
-    .app { padding: 40px 24px 80px; }
-    .header h1 { font-size: 2rem; }
-  }
-
-  /* Shake animation for errors */
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
     20%      { transform: translateX(-6px); }
@@ -552,104 +563,290 @@
   }
 
   .shake { animation: shake 0.4s ease-in-out; }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════════════ */
+  @media (min-width: 500px) {
+    .teams-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 680px) {
+    .app { padding: 80px 24px 80px; }
+    .header h1 { font-size: 2rem; }
+  }
 </style>
 </head>
 <body>
 
+<!-- ═══════════ TOOLBAR ═══════════ -->
+<div class="toolbar">
+  <button class="toolbar-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+    <span class="icon" id="themeIcon">🌙</span>
+    <span id="themeLabel"></span>
+  </button>
+  <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)" aria-label="Language">
+    <option value="pt">🇧🇷 Português</option>
+    <option value="en">🇺🇸 English</option>
+    <option value="es">🇪🇸 Español</option>
+  </select>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
 <div class="app">
 
-  <!-- Header -->
   <div class="header">
     <div class="header-icon">🎲</div>
-    <h1>Sorteio de Equipes</h1>
-    <p>Distribua participantes em equipes de forma aleatória</p>
+    <h1 data-i18n="title"></h1>
+    <p data-i18n="subtitle"></p>
   </div>
 
-  <!-- Número de equipes -->
   <div class="card" style="animation-delay:0.1s">
-    <span class="card-label">Número de Equipes</span>
+    <span class="card-label" data-i18n="labelTeams"></span>
     <div class="select-wrapper">
-      <select id="numEquipes">
-        <option value="1">1 Equipe</option>
-        <option value="2" selected>2 Equipes</option>
-        <option value="3">3 Equipes</option>
-        <option value="4">4 Equipes</option>
-        <option value="5">5 Equipes</option>
-        <option value="6">6 Equipes</option>
-        <option value="7">7 Equipes</option>
-        <option value="8">8 Equipes</option>
-        <option value="9">9 Equipes</option>
-        <option value="10">10 Equipes</option>
-      </select>
+      <select id="numEquipes"></select>
     </div>
   </div>
 
-  <!-- Separador -->
   <div class="card" style="animation-delay:0.15s">
-    <span class="card-label">Tipo de Separador</span>
+    <span class="card-label" data-i18n="labelSeparator"></span>
     <div class="checkbox-group">
       <label class="checkbox-item active" id="chkEnterLabel">
         <input type="checkbox" id="chkEnter" checked>
         <span class="check-box">
           <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </span>
-        <span class="check-label">Separado por Enter</span>
+        <span class="check-label" data-i18n="sepEnter"></span>
       </label>
       <label class="checkbox-item" id="chkVirgulaLabel">
         <input type="checkbox" id="chkVirgula">
         <span class="check-box">
           <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </span>
-        <span class="check-label">Separado por Vírgula</span>
+        <span class="check-label" data-i18n="sepComma"></span>
       </label>
     </div>
   </div>
 
-  <!-- Participantes -->
   <div class="card" style="animation-delay:0.2s">
-    <span class="card-label">Lista de Participantes</span>
-    <textarea id="txtParticipantes" placeholder="Cole aqui os nomes dos participantes..."></textarea>
+    <span class="card-label" data-i18n="labelParticipants"></span>
+    <textarea id="txtParticipantes"></textarea>
     <div class="counter-row">
       <div class="counter-badge">
         <span class="dot"></span>
-        <span id="contadorTexto">0 participantes</span>
+        <span id="contadorTexto"></span>
       </div>
     </div>
   </div>
 
-  <!-- Mensagem -->
   <div class="message" id="msgBox">
     <span id="msgIcon"></span>
     <span id="msgText"></span>
   </div>
 
-  <!-- Botão -->
   <div class="card" style="animation-delay:0.25s; background:transparent; border:none; padding:0;">
-    <button class="btn-sortear" id="btnSortear" onclick="sortear()">
-      🎲 &nbsp;Sortear Equipes
-    </button>
+    <button class="btn-sortear" id="btnSortear" onclick="sortear()"></button>
   </div>
 
-  <!-- Resultado -->
   <div class="result-area" id="resultArea">
     <div class="card" style="animation-delay:0s">
-      <span class="result-title">✨ Resultado do Sorteio</span>
+      <span class="result-title" data-i18n="resultTitle"></span>
       <div class="teams-grid" id="teamsGrid"></div>
       <textarea class="result-textarea" id="resultTextarea" readonly></textarea>
-      <button class="btn-copy" onclick="copiarResultado()">📋 Copiar resultado</button>
+      <button class="btn-copy" id="btnCopy" onclick="copiarResultado()"></button>
     </div>
   </div>
 
 </div>
 
+<!-- ═══════════════════════════════════════════════════
+     i18n/pt.js — Português (Brasil)
+     ═══════════════════════════════════════════════════ -->
 <script>
-  // ─── Checkbox toggle (radio-like behavior) ───
-  const chkEnter = document.getElementById('chkEnter');
-  const chkVirgula = document.getElementById('chkVirgula');
-  const chkEnterLabel = document.getElementById('chkEnterLabel');
-  const chkVirgulaLabel = document.getElementById('chkVirgulaLabel');
+const locale_pt = {
+  lang: "pt-BR",
+  title: "Sorteio de Equipes",
+  subtitle: "Distribua participantes em equipes de forma aleatória",
+  labelTeams: "Número de Equipes",
+  teamOption: function(n) { return n === 1 ? "1 Equipe" : n + " Equipes"; },
+  labelSeparator: "Tipo de Separador",
+  sepEnter: "Separado por Enter",
+  sepComma: "Separado por Vírgula",
+  labelParticipants: "Lista de Participantes",
+  placeholder: "Cole aqui os nomes dos participantes...",
+  counter: function(n) { return n === 1 ? "1 participante" : n + " participantes"; },
+  btnDraw: "🎲  Sortear Equipes",
+  resultTitle: "✨ Resultado do Sorteio",
+  teamName: function(n) { return "Equipe " + n; },
+  btnCopy: "📋 Copiar resultado",
+  msgCopied: "Resultado copiado para a área de transferência!",
+  msgNoParticipants: "Insira ao menos um participante.",
+  msgNotEnough: function(need, teams) {
+    return "Você precisa de pelo menos " + need + " participantes para " + teams + " equipe(s).";
+  },
+  msgOdd: function(total, teams, extra) {
+    return "Número de participantes (" + total + ") não é divisível igualmente por " + teams + " equipe(s). " + extra + " equipe(s) ficarão com 1 membro a mais.";
+  },
+  themeDark: "Escuro",
+  themeLight: "Claro"
+};
+</script>
 
-  chkEnterLabel.addEventListener('click', (e) => {
+<!-- ═══════════════════════════════════════════════════
+     i18n/en.js — English
+     ═══════════════════════════════════════════════════ -->
+<script>
+const locale_en = {
+  lang: "en",
+  title: "Team Draw",
+  subtitle: "Randomly distribute participants into teams",
+  labelTeams: "Number of Teams",
+  teamOption: function(n) { return n === 1 ? "1 Team" : n + " Teams"; },
+  labelSeparator: "Separator Type",
+  sepEnter: "Separated by Enter",
+  sepComma: "Separated by Comma",
+  labelParticipants: "Participant List",
+  placeholder: "Paste participant names here...",
+  counter: function(n) { return n === 1 ? "1 participant" : n + " participants"; },
+  btnDraw: "🎲  Draw Teams",
+  resultTitle: "✨ Draw Results",
+  teamName: function(n) { return "Team " + n; },
+  btnCopy: "📋 Copy result",
+  msgCopied: "Result copied to clipboard!",
+  msgNoParticipants: "Please enter at least one participant.",
+  msgNotEnough: function(need, teams) {
+    return "You need at least " + need + " participants for " + teams + " team(s).";
+  },
+  msgOdd: function(total, teams, extra) {
+    return "Number of participants (" + total + ") is not evenly divisible by " + teams + " team(s). " + extra + " team(s) will have 1 extra member.";
+  },
+  themeDark: "Dark",
+  themeLight: "Light"
+};
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     i18n/es.js — Español
+     ═══════════════════════════════════════════════════ -->
+<script>
+const locale_es = {
+  lang: "es",
+  title: "Sorteo de Equipos",
+  subtitle: "Distribuya participantes en equipos de forma aleatoria",
+  labelTeams: "Número de Equipos",
+  teamOption: function(n) { return n === 1 ? "1 Equipo" : n + " Equipos"; },
+  labelSeparator: "Tipo de Separador",
+  sepEnter: "Separado por Enter",
+  sepComma: "Separado por Coma",
+  labelParticipants: "Lista de Participantes",
+  placeholder: "Pegue aquí los nombres de los participantes...",
+  counter: function(n) { return n === 1 ? "1 participante" : n + " participantes"; },
+  btnDraw: "🎲  Sortear Equipos",
+  resultTitle: "✨ Resultado del Sorteo",
+  teamName: function(n) { return "Equipo " + n; },
+  btnCopy: "📋 Copiar resultado",
+  msgCopied: "¡Resultado copiado al portapapeles!",
+  msgNoParticipants: "Ingrese al menos un participante.",
+  msgNotEnough: function(need, teams) {
+    return "Necesita al menos " + need + " participantes para " + teams + " equipo(s).";
+  },
+  msgOdd: function(total, teams, extra) {
+    return "El número de participantes (" + total + ") no es divisible equitativamente por " + teams + " equipo(s). " + extra + " equipo(s) tendrán 1 miembro más.";
+  },
+  themeDark: "Oscuro",
+  themeLight: "Claro"
+};
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     MAIN APPLICATION
+     ═══════════════════════════════════════════════════ -->
+<script>
+  // ─── Registry & state ───
+  var locales = { pt: locale_pt, en: locale_en, es: locale_es };
+  var t = locale_pt;
+
+  // ─── LocalStorage helpers ───
+  function save(key, val) {
+    try { localStorage.setItem('sorteio_' + key, val); } catch(e) {}
+  }
+  function load(key, fallback) {
+    try { return localStorage.getItem('sorteio_' + key) || fallback; } catch(e) { return fallback; }
+  }
+
+  // ─── Theme ───
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+    if (theme === 'dark') {
+      icon.textContent = '🌙';
+      label.textContent = t.themeDark;
+    } else {
+      icon.textContent = '☀️';
+      label.textContent = t.themeLight;
+    }
+    save('theme', theme);
+  }
+
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
+  // ─── Language ───
+  function changeLanguage(lang) {
+    save('lang', lang);
+    applyLanguage(lang);
+  }
+
+  function applyLanguage(lang) {
+    t = locales[lang] || locale_pt;
+    document.documentElement.lang = t.lang;
+    document.title = t.title;
+
+    // Static i18n
+    var els = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < els.length; i++) {
+      var key = els[i].getAttribute('data-i18n');
+      if (t[key] && typeof t[key] === 'string') {
+        els[i].textContent = t[key];
+      }
+    }
+
+    // Dynamic
+    document.getElementById('btnSortear').innerHTML = t.btnDraw;
+    document.getElementById('btnCopy').textContent = t.btnCopy;
+    document.getElementById('txtParticipantes').placeholder = t.placeholder;
+    document.getElementById('langSelect').value = lang;
+
+    // Rebuild team options
+    var sel = document.getElementById('numEquipes');
+    var currentVal = sel.value || '2';
+    sel.innerHTML = '';
+    for (var n = 1; n <= 10; n++) {
+      var opt = document.createElement('option');
+      opt.value = n;
+      opt.textContent = t.teamOption(n);
+      if (n == currentVal) opt.selected = true;
+      sel.appendChild(opt);
+    }
+
+    // Theme label
+    var currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    document.getElementById('themeLabel').textContent =
+      currentTheme === 'dark' ? t.themeDark : t.themeLight;
+
+    atualizarContador();
+  }
+
+  // ─── Checkbox toggle ───
+  var chkEnter = document.getElementById('chkEnter');
+  var chkVirgula = document.getElementById('chkVirgula');
+  var chkEnterLabel = document.getElementById('chkEnterLabel');
+  var chkVirgulaLabel = document.getElementById('chkVirgulaLabel');
+
+  chkEnterLabel.addEventListener('click', function(e) {
     e.preventDefault();
     chkEnter.checked = true;
     chkVirgula.checked = false;
@@ -658,7 +855,7 @@
     atualizarContador();
   });
 
-  chkVirgulaLabel.addEventListener('click', (e) => {
+  chkVirgulaLabel.addEventListener('click', function(e) {
     e.preventDefault();
     chkVirgula.checked = true;
     chkEnter.checked = false;
@@ -667,34 +864,29 @@
     atualizarContador();
   });
 
-  // ─── Contador de participantes ───
-  const txtParticipantes = document.getElementById('txtParticipantes');
-  const contadorTexto = document.getElementById('contadorTexto');
+  // ─── Participants ───
+  var txtParticipantes = document.getElementById('txtParticipantes');
+  var contadorTexto = document.getElementById('contadorTexto');
 
   txtParticipantes.addEventListener('input', atualizarContador);
 
   function getParticipantes() {
-    const texto = txtParticipantes.value.trim();
+    var texto = txtParticipantes.value.trim();
     if (!texto) return [];
-    const separador = chkVirgula.checked ? ',' : '\n';
-    return texto.split(separador)
-      .map(n => n.trim())
-      .filter(n => n.length > 0);
+    var sep = chkVirgula.checked ? ',' : '\n';
+    return texto.split(sep).map(function(n) { return n.trim(); }).filter(function(n) { return n.length > 0; });
   }
 
   function atualizarContador() {
-    const count = getParticipantes().length;
-    contadorTexto.textContent = count === 1 ? '1 participante' : `${count} participantes`;
+    contadorTexto.textContent = t.counter(getParticipantes().length);
   }
 
-  // ─── Mensagem ───
+  // ─── Message ───
   function showMsg(type, icon, text) {
-    const box = document.getElementById('msgBox');
-    const msgIcon = document.getElementById('msgIcon');
-    const msgText = document.getElementById('msgText');
-    box.className = `message show ${type}`;
-    msgIcon.textContent = icon;
-    msgText.textContent = text;
+    var box = document.getElementById('msgBox');
+    document.getElementById('msgIcon').textContent = icon;
+    document.getElementById('msgText').textContent = text;
+    box.className = 'message show ' + type;
   }
 
   function hideMsg() {
@@ -703,94 +895,105 @@
 
   // ─── Shuffle (Fisher-Yates) ───
   function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
     }
     return a;
   }
 
-  // ─── Sortear ───
+  // ─── Draw ───
   function sortear() {
     hideMsg();
     document.getElementById('resultArea').classList.remove('show');
 
-    const participantes = getParticipantes();
-    const numEquipes = parseInt(document.getElementById('numEquipes').value);
+    var participantes = getParticipantes();
+    var numEquipes = parseInt(document.getElementById('numEquipes').value);
 
     if (participantes.length === 0) {
-      showMsg('error', '⚠️', 'Insira ao menos um participante.');
+      showMsg('error', '⚠️', t.msgNoParticipants);
       shakeBotao();
       return;
     }
 
     if (participantes.length < numEquipes) {
-      showMsg('error', '⚠️', `Você precisa de pelo menos ${numEquipes} participantes para ${numEquipes} equipe(s).`);
+      showMsg('error', '⚠️', t.msgNotEnough(numEquipes, numEquipes));
       shakeBotao();
       return;
     }
 
     if (participantes.length % numEquipes !== 0) {
-      const resto = participantes.length % numEquipes;
-      showMsg('warning', '⚠️',
-        `Número de participantes (${participantes.length}) não é divisível igualmente por ${numEquipes} equipe(s). ` +
-        `${resto} equipe(s) ficarão com 1 membro a mais.`
-      );
+      var resto = participantes.length % numEquipes;
+      showMsg('warning', '⚠️', t.msgOdd(participantes.length, numEquipes, resto));
     }
 
-    const embaralhados = shuffle(participantes);
-    const equipes = Array.from({ length: numEquipes }, () => []);
-
-    embaralhados.forEach((p, i) => {
-      equipes[i % numEquipes].push(p);
-    });
+    var embaralhados = shuffle(participantes);
+    var equipes = [];
+    for (var i = 0; i < numEquipes; i++) equipes.push([]);
+    for (var i = 0; i < embaralhados.length; i++) {
+      equipes[i % numEquipes].push(embaralhados[i]);
+    }
 
     renderResultado(equipes);
   }
 
   function shakeBotao() {
-    const btn = document.getElementById('btnSortear');
+    var btn = document.getElementById('btnSortear');
     btn.classList.add('shake');
-    setTimeout(() => btn.classList.remove('shake'), 500);
+    setTimeout(function() { btn.classList.remove('shake'); }, 500);
   }
 
-  // ─── Renderizar resultado ───
+  // ─── Render result ───
   function renderResultado(equipes) {
-    const grid = document.getElementById('teamsGrid');
-    const area = document.getElementById('resultArea');
-    const resultTa = document.getElementById('resultTextarea');
+    var grid = document.getElementById('teamsGrid');
+    var area = document.getElementById('resultArea');
+    var resultTa = document.getElementById('resultTextarea');
 
-    // Cards visuais
-    grid.innerHTML = equipes.map((eq, i) => `
-      <div class="team-card">
-        <div class="team-header">
-          <span class="team-number">${i + 1}</span>
-          <span class="team-name">Equipe ${i + 1}</span>
-        </div>
-        <ul class="team-members">
-          ${eq.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
-        </ul>
-      </div>
-    `).join('');
+    var html = '';
+    for (var i = 0; i < equipes.length; i++) {
+      html += '<div class="team-card"><div class="team-header">';
+      html += '<span class="team-number">' + (i + 1) + '</span>';
+      html += '<span class="team-name">' + escapeHtml(t.teamName(i + 1)) + '</span>';
+      html += '</div><ul class="team-members">';
+      for (var j = 0; j < equipes[i].length; j++) {
+        html += '<li>' + escapeHtml(equipes[i][j]) + '</li>';
+      }
+      html += '</ul></div>';
+    }
+    grid.innerHTML = html;
 
-    // Textarea em colunas
-    const maxLen = Math.max(...equipes.map(eq => eq.length));
-    const colWidth = Math.max(...equipes.flatMap((eq, i) => {
-      const header = `Equipe ${i + 1}`;
-      return [header.length, ...eq.map(m => m.length)];
-    })) + 4;
+    // Textarea columns
+    var maxLen = 0;
+    for (var i = 0; i < equipes.length; i++) {
+      if (equipes[i].length > maxLen) maxLen = equipes[i].length;
+    }
 
-    let lines = [];
+    var colWidth = 0;
+    for (var i = 0; i < equipes.length; i++) {
+      var hLen = t.teamName(i + 1).length;
+      if (hLen > colWidth) colWidth = hLen;
+      for (var j = 0; j < equipes[i].length; j++) {
+        if (equipes[i][j].length > colWidth) colWidth = equipes[i][j].length;
+      }
+    }
+    colWidth += 4;
 
-    // Header
-    let headerLine = equipes.map((_, i) => `Equipe ${i + 1}`.padEnd(colWidth)).join('');
+    var lines = [];
+    var headerLine = '';
+    var sepLine = '';
+    for (var i = 0; i < equipes.length; i++) {
+      headerLine += padEnd(t.teamName(i + 1), colWidth);
+      sepLine += repeatStr('─', colWidth - 2) + '  ';
+    }
     lines.push(headerLine);
-    lines.push(equipes.map(() => '─'.repeat(colWidth - 2) + '  ').join(''));
+    lines.push(sepLine);
 
-    // Rows
-    for (let r = 0; r < maxLen; r++) {
-      let row = equipes.map(eq => (eq[r] || '').padEnd(colWidth)).join('');
+    for (var r = 0; r < maxLen; r++) {
+      var row = '';
+      for (var i = 0; i < equipes.length; i++) {
+        row += padEnd(equipes[i][r] || '', colWidth);
+      }
       lines.push(row);
     }
 
@@ -799,25 +1002,52 @@
     area.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function padEnd(str, len) {
+    while (str.length < len) str += ' ';
+    return str;
+  }
+
+  function repeatStr(ch, n) {
+    var s = '';
+    for (var i = 0; i < n; i++) s += ch;
+    return s;
+  }
+
   function escapeHtml(s) {
-    const d = document.createElement('div');
+    var d = document.createElement('div');
     d.textContent = s;
     return d.innerHTML;
   }
 
-  // ─── Copiar ───
+  // ─── Copy ───
   function copiarResultado() {
-    const ta = document.getElementById('resultTextarea');
-    navigator.clipboard.writeText(ta.value).then(() => {
-      showMsg('success', '✅', 'Resultado copiado para a área de transferência!');
-      setTimeout(hideMsg, 3000);
-    }).catch(() => {
-      ta.select();
-      document.execCommand('copy');
-      showMsg('success', '✅', 'Resultado copiado!');
-      setTimeout(hideMsg, 3000);
-    });
+    var ta = document.getElementById('resultTextarea');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ta.value).then(function() {
+        showMsg('success', '✅', t.msgCopied);
+        setTimeout(hideMsg, 3000);
+      }).catch(function() {
+        fallbackCopy(ta);
+      });
+    } else {
+      fallbackCopy(ta);
+    }
   }
+
+  function fallbackCopy(ta) {
+    ta.select();
+    document.execCommand('copy');
+    showMsg('success', '✅', t.msgCopied);
+    setTimeout(hideMsg, 3000);
+  }
+
+  // ─── Init ───
+  (function init() {
+    var savedTheme = load('theme', 'dark');
+    var savedLang = load('lang', 'pt');
+    applyTheme(savedTheme);
+    applyLanguage(savedLang);
+  })();
 </script>
 
 </body>
