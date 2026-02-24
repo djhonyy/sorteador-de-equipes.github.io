@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorteio de Equipes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181b24;
+    --surface-alt: #1e2230;
+    --border: #2a2f3e;
+    --border-glow: #3b82f6;
+    --text: #e8eaf0;
+    --text-muted: #8892a8;
+    --accent: #3b82f6;
+    --accent-light: #60a5fa;
+    --accent-dark: #2563eb;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    --gradient-2: linear-gradient(135deg, #0f1117 0%, #1a1d2e 100%);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    --shadow-glow: 0 0 20px rgba(59,130,246,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(34,197,94,0.03) 0%, transparent 50%);
+    animation: bgFloat 20s ease-in-out infinite alternate;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  @keyframes bgFloat {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-3%, -3%) rotate(3deg); }
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    animation: fadeDown 0.6s ease-out;
+  }
+
+  .header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--gradient-1);
+    margin-bottom: 16px;
+    font-size: 26px;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.5s ease-out both;
+    transition: border-color 0.3s;
+  }
+
+  .card:hover { border-color: #363c50; }
+
+  .card-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  /* Select */
+  .select-wrapper {
+    position: relative;
+  }
+
+  .select-wrapper::after {
+    content: '▾';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    pointer-events: none;
+    font-size: 14px;
+  }
+
+  select {
+    width: 100%;
+    padding: 14px 40px 14px 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+
+  /* Checkboxes */
+  .checkbox-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-item {
+    flex: 1;
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.25s;
+    user-select: none;
+  }
+
+  .checkbox-item:hover { border-color: #464d66; }
+  .checkbox-item.active {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+  }
+
+  .checkbox-item input[type="checkbox"] { display: none; }
+
+  .check-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+
+  .check-box svg {
+    width: 14px;
+    height: 14px;
+    stroke: white;
+    stroke-width: 3;
+    fill: none;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s;
+  }
+
+  .checkbox-item.active .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .checkbox-item.active .check-box svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .check-label {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    resize: vertical;
+    transition: all 0.25s;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+
+  textarea::placeholder {
+    color: #4a5068;
+    font-family: 'Outfit', sans-serif;
+    font-style: italic;
+  }
+
+  /* Counter badge */
+  .counter-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .counter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 50px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    transition: all 0.3s;
+  }
+
+  .counter-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* Button */
+  .btn-sortear {
+    width: 100%;
+    padding: 16px;
+    background: var(--gradient-1);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.25);
+  }
+
+  .btn-sortear:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(59,130,246,0.35);
+  }
+
+  .btn-sortear:active {
+    transform: translateY(0);
+  }
+
+  .btn-sortear::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+
+  .btn-sortear:hover::after {
+    transform: translateX(100%);
+  }
+
+  /* Message */
+  .message {
+    display: none;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    animation: fadeUp 0.3s ease-out;
+  }
+
+  .message.show { display: flex; align-items: center; gap: 10px; }
+
+  .message.error {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #fca5a5;
+  }
+
+  .message.warning {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: #fcd34d;
+  }
+
+  .message.success {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #86efac;
+  }
+
+  /* Result */
+  .result-area {
+    display: none;
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  .result-area.show { display: block; }
+
+  .result-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent-light);
+  }
+
+  .teams-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .team-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    animation: fadeUp 0.4s ease-out both;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .team-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .team-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .team-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--gradient-1);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .team-name {
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .team-members {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .team-members li {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding: 4px 0;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .team-members li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-50%);
+  }
+
+  /* Result textarea */
+  .result-textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    resize: vertical;
+    margin-top: 12px;
+    white-space: pre;
+    tab-size: 2;
+  }
+
+  .result-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 10px;
+  }
+
+  .btn-copy:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stagger cards */
+  .team-card:nth-child(1)  { animation-delay: 0.05s; }
+  .team-card:nth-child(2)  { animation-delay: 0.10s; }
+  .team-card:nth-child(3)  { animation-delay: 0.15s; }
+  .team-card:nth-child(4)  { animation-delay: 0.20s; }
+  .team-card:nth-child(5)  { animation-delay: 0.25s; }
+  .team-card:nth-child(6)  { animation-delay: 0.30s; }
+  .team-card:nth-child(7)  { animation-delay: 0.35s; }
+  .team-card:nth-child(8)  { animation-delay: 0.40s; }
+  .team-card:nth-child(9)  { animation-delay: 0.45s; }
+  .team-card:nth-child(10) { animation-delay: 0.50s; }
+
+  /* Responsive grid */
+  @media (min-width: 500px) {
+    .teams-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 680px) {
+    .app { padding: 40px 24px 80px; }
+    .header h1 { font-size: 2rem; }
+  }
+
+  /* Shake animation for errors */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+  }
+
+  .shake { animation: shake 0.4s ease-in-out; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">🎲</div>
+    <h1>Sorteio de Equipes</h1>
+    <p>Distribua participantes em equipes de forma aleatória</p>
+  </div>
+
+  <!-- Número de equipes -->
+  <div class="card" style="animation-delay:0.1s">
+    <span class="card-label">Número de Equipes</span>
+    <div class="select-wrapper">
+      <select id="numEquipes">
+        <option value="1">1 Equipe</option>
+        <option value="2" selected>2 Equipes</option>
+        <option value="3">3 Equipes</option>
+        <option value="4">4 Equipes</option>
+        <option value="5">5 Equipes</option>
+        <option value="6">6 Equipes</option>
+        <option value="7">7 Equipes</option>
+        <option value="8">8 Equipes</option>
+        <option value="9">9 Equipes</option>
+        <option value="10">10 Equipes</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Separador -->
+  <div class="card" style="animation-delay:0.15s">
+    <span class="card-label">Tipo de Separador</span>
+    <div class="checkbox-group">
+      <label class="checkbox-item active" id="chkEnterLabel">
+        <input type="checkbox" id="chkEnter" checked>
+        <span class="check-box">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </span>
+        <span class="check-label">Separado por Enter</span>
+      </label>
+      <label class="checkbox-item" id="chkVirgulaLabel">
+        <input type="checkbox" id="chkVirgula">
+        <span class="check-box">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </span>
+        <span class="check-label">Separado por Vírgula</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Participantes -->
+  <div class="card" style="animation-delay:0.2s">
+    <span class="card-label">Lista de Participantes</span>
+    <textarea id="txtParticipantes" placeholder="Cole aqui os nomes dos participantes..."></textarea>
+    <div class="counter-row">
+      <div class="counter-badge">
+        <span class="dot"></span>
+        <span id="contadorTexto">0 participantes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensagem -->
+  <div class="message" id="msgBox">
+    <span id="msgIcon"></span>
+    <span id="msgText"></span>
+  </div>
+
+  <!-- Botão -->
+  <div class="card" style="animation-delay:0.25s; background:transparent; border:none; padding:0;">
+    <button class="btn-sortear" id="btnSortear" onclick="sortear()">
+      🎲 &nbsp;Sortear Equipes
+    </button>
+  </div>
+
+  <!-- Resultado -->
+  <div class="result-area" id="resultArea">
+    <div class="card" style="animation-delay:0s">
+      <span class="result-title">✨ Resultado do Sorteio</span>
+      <div class="teams-grid" id="teamsGrid"></div>
+      <textarea class="result-textarea" id="resultTextarea" readonly></textarea>
+      <button class="btn-copy" onclick="copiarResultado()">📋 Copiar resultado</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ─── Checkbox toggle (radio-like behavior) ───
+  const chkEnter = document.getElementById('chkEnter');
+  const chkVirgula = document.getElementById('chkVirgula');
+  const chkEnterLabel = document.getElementById('chkEnterLabel');
+  const chkVirgulaLabel = document.getElementById('chkVirgulaLabel');
+
+  chkEnterLabel.addEventListener('click', (e) => {
+    e.preventDefault();
+    chkEnter.checked = true;
+    chkVirgula.checked = false;
+    chkEnterLabel.classList.add('active');
+    chkVirgulaLabel.classList.remove('active');
+    atualizarContador();
+  });
+
+  chkVirgulaLabel.addEventListener('click', (e) => {
+    e.preventDefault();
+    chkVirgula.checked = true;
+    chkEnter.checked = false;
+    chkVirgulaLabel.classList.add('active');
+    chkEnterLabel.classList.remove('active');
+    atualizarContador();
+  });
+
+  // ─── Contador de participantes ───
+  const txtParticipantes = document.getElementById('txtParticipantes');
+  const contadorTexto = document.getElementById('contadorTexto');
+
+  txtParticipantes.addEventListener('input', atualizarContador);
+
+  function getParticipantes() {
+    const texto = txtParticipantes.value.trim();
+    if (!texto) return [];
+    const separador = chkVirgula.checked ? ',' : '\n';
+    return texto.split(separador)
+      .map(n => n.trim())
+      .filter(n => n.length > 0);
+  }
+
+  function atualizarContador() {
+    const count = getParticipantes().length;
+    contadorTexto.textContent = count === 1 ? '1 participante' : `${count} participantes`;
+  }
+
+  // ─── Mensagem ───
+  function showMsg(type, icon, text) {
+    const box = document.getElementById('msgBox');
+    const msgIcon = document.getElementById('msgIcon');
+    const msgText = document.getElementById('msgText');
+    box.className = `message show ${type}`;
+    msgIcon.textContent = icon;
+    msgText.textContent = text;
+  }
+
+  function hideMsg() {
+    document.getElementById('msgBox').className = 'message';
+  }
+
+  // ─── Shuffle (Fisher-Yates) ───
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ─── Sortear ───
+  function sortear() {
+    hideMsg();
+    document.getElementById('resultArea').classList.remove('show');
+
+    const participantes = getParticipantes();
+    const numEquipes = parseInt(document.getElementById('numEquipes').value);
+
+    if (participantes.length === 0) {
+      showMsg('error', '⚠️', 'Insira ao menos um participante.');
+      shakeBotao();
+      return;
+    }
+
+    if (participantes.length < numEquipes) {
+      showMsg('error', '⚠️', `Você precisa de pelo menos ${numEquipes} participantes para ${numEquipes} equipe(s).`);
+      shakeBotao();
+      return;
+    }
+
+    if (participantes.length % numEquipes !== 0) {
+      const resto = participantes.length % numEquipes;
+      showMsg('warning', '⚠️',
+        `Número de participantes (${participantes.length}) não é divisível igualmente por ${numEquipes} equipe(s). ` +
+        `${resto} equipe(s) ficarão com 1 membro a mais.`
+      );
+    }
+
+    const embaralhados = shuffle(participantes);
+    const equipes = Array.from({ length: numEquipes }, () => []);
+
+    embaralhados.forEach((p, i) => {
+      equipes[i % numEquipes].push(p);
+    });
+
+    renderResultado(equipes);
+  }
+
+  function shakeBotao() {
+    const btn = document.getElementById('btnSortear');
+    btn.classList.add('shake');
+    setTimeout(() => btn.classList.remove('shake'), 500);
+  }
+
+  // ─── Renderizar resultado ───
+  function renderResultado(equipes) {
+    const grid = document.getElementById('teamsGrid');
+    const area = document.getElementById('resultArea');
+    const resultTa = document.getElementById('resultTextarea');
+
+    // Cards visuais
+    grid.innerHTML = equipes.map((eq, i) => `
+      <div class="team-card">
+        <div class="team-header">
+          <span class="team-number">${i + 1}</span>
+          <span class="team-name">Equipe ${i + 1}</span>
+        </div>
+        <ul class="team-members">
+          ${eq.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
+        </ul>
+      </div>
+    `).join('');
+
+    // Textarea em colunas
+    const maxLen = Math.max(...equipes.map(eq => eq.length));
+    const colWidth = Math.max(...equipes.flatMap((eq, i) => {
+      const header = `Equipe ${i + 1}`;
+      return [header.length, ...eq.map(m => m.length)];
+    })) + 4;
+
+    let lines = [];
+
+    // Header
+    let headerLine = equipes.map((_, i) => `Equipe ${i + 1}`.padEnd(colWidth)).join('');
+    lines.push(headerLine);
+    lines.push(equipes.map(() => '─'.repeat(colWidth - 2) + '  ').join(''));
+
+    // Rows
+    for (let r = 0; r < maxLen; r++) {
+      let row = equipes.map(eq => (eq[r] || '').padEnd(colWidth)).join('');
+      lines.push(row);
+    }
+
+    resultTa.value = lines.join('\n');
+    area.classList.add('show');
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // ─── Copiar ───
+  function copiarResultado() {
+    const ta = document.getElementById('resultTextarea');
+    navigator.clipboard.writeText(ta.value).then(() => {
+      showMsg('success', '✅', 'Resultado copiado para a área de transferência!');
+      setTimeout(hideMsg, 3000);
+    }).catch(() => {
+      ta.select();
+      document.execCommand('copy');
+      showMsg('success', '✅', 'Resultado copiado!');
+      setTimeout(hideMsg, 3000);
+    });
+  }
+</script>
+
+</body>
+</html>
